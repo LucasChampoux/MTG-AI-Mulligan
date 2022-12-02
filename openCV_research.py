@@ -4,6 +4,10 @@ import requests
 import urllib.parse
 from time import sleep
 import difflib
+from PIL import ImageGrab
+import numpy as np
+import pyscreenshot
+# import win32gui
 
 def APIConfirmCheck(cardName):
     url = "https://api.scryfall.com/cards/search?q=" + urllib.parse.quote(cardName, safe='')
@@ -19,7 +23,15 @@ def APIConfirmCheck(cardName):
         return True
 
 
-image = cv2.imread("realMagicCards.png")
+
+imageFromWindow = ImageGrab.grab(bbox=None)
+width, height = imageFromWindow.size
+imageFromWindow = imageFromWindow.crop((0, height / 2.50, width / 2, height))
+imageFromWindow.save("WrittenFile.png")
+
+image = cv2.imread("WrittenFile.png")
+
+
 original_image = image.copy()
 #parse JSON
 jsonFile = open("NamesOnly.json", "r")
@@ -45,14 +57,16 @@ for c in contours:
     x,y,w,h = cv2.boundingRect(c)
     cv2.rectangle(image, (x, y), (x + w, y + h), (36, 255, 12), 3)
     ROI = original_image[y:y+h, x:x+w]
-    if(ROI.shape[0] > 250 and ROI.shape[0] < 270 and ROI.shape[1] > 175 and ROI.shape[1] < 195 and ROI.shape[2] > 0 and ROI.shape[2] < 5):
-        cv2.imwrite("ROI_{}.png".format(image_number), ROI)
-        custom_config = r'--oem 3 --psm 6'
-
-        tempVal = pytesseract.image_to_string("ROI_{}.png".format(image_number), config = custom_config).splitlines()[0]
+    cv2.imwrite("ROI_{}.png".format(image_number), ROI)
+    custom_config = r'--oem 3 --psm 6'
+    if(ROI.shape[0] > ROI.shape[1]):
+        recognized_list = pytesseract.image_to_string("ROI_{}.png".format(image_number), config = custom_config).splitlines()
+        tempVal = recognized_list[0] if len(recognized_list) > 0 else ""
         title_match = difflib.get_close_matches(tempVal, newJson)
         if not len(title_match) == 0:
             nameList.append(title_match[0])
+        else:
+            print("Title " + tempVal + " does not match a known magic card")
 
     image_number += 1
 
@@ -68,7 +82,7 @@ for a in nameList:
 
 
 newFile.close()
-cv2.imshow("image", image)
+cv2.imshow("image2", image)
 
 cv2.waitKey(0)
 
