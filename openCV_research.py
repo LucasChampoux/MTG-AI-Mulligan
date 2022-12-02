@@ -1,11 +1,8 @@
 import cv2
-import numpy as np
-import imutils
 import pytesseract
 import requests
 import urllib.parse
 from time import sleep
-import json
 import difflib
 
 def APIConfirmCheck(cardName):
