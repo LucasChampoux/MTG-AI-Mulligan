@@ -5,6 +5,8 @@ import pytesseract
 import requests
 import urllib.parse
 from time import sleep
+import json
+import difflib
 
 def APIConfirmCheck(cardName):
     url = "https://api.scryfall.com/cards/search?q=" + urllib.parse.quote(cardName, safe='')
@@ -22,6 +24,11 @@ def APIConfirmCheck(cardName):
 
 image = cv2.imread("realMagicCards.png")
 original_image = image.copy()
+#parse JSON
+jsonFile = open("NamesOnly.json", "r")
+newJson = jsonFile.read().replace(",", "").replace("  ", "").splitlines()
+jsonFile.close()
+
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blur = cv2.GaussianBlur(gray, (5,5), 0)
@@ -44,7 +51,10 @@ for c in contours:
     if(ROI.shape[0] > 250 and ROI.shape[0] < 270 and ROI.shape[1] > 175 and ROI.shape[1] < 195 and ROI.shape[2] > 0 and ROI.shape[2] < 5):
         cv2.imwrite("ROI_{}.png".format(image_number), ROI)
         custom_config = r'--oem 3 --psm 6'
-        nameList.append(pytesseract.image_to_string("ROI_{}.png".format(image_number), config = custom_config).splitlines()[0])
+
+        tempVal = pytesseract.image_to_string("ROI_{}.png".format(image_number), config = custom_config).splitlines()[0]
+        list.append(difflib.get_close_matches(tempVal, newJson))
+
     image_number += 1
 
 newFile = open("cardTitles.txt".format(image_number), "w+")
