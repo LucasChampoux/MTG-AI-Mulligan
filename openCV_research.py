@@ -26,7 +26,7 @@ image = cv2.imread("realMagicCards.png")
 original_image = image.copy()
 #parse JSON
 jsonFile = open("NamesOnly.json", "r")
-newJson = jsonFile.read().replace(",", "").replace("  ", "").splitlines()
+newJson = jsonFile.read().replace("", "").replace("  ", "").splitlines()
 jsonFile.close()
 
 
@@ -53,7 +53,9 @@ for c in contours:
         custom_config = r'--oem 3 --psm 6'
 
         tempVal = pytesseract.image_to_string("ROI_{}.png".format(image_number), config = custom_config).splitlines()[0]
-        list.append(difflib.get_close_matches(tempVal, newJson))
+        title_match = difflib.get_close_matches(tempVal, newJson)
+        if not len(title_match) == 0:
+            nameList.append(title_match[0])
 
     image_number += 1
 
