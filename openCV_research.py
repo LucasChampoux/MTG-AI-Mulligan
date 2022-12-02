@@ -7,6 +7,7 @@ import difflib
 from PIL import ImageGrab
 import numpy as np
 import pyscreenshot
+import sys
 # import win32gui
 
 def APIConfirmCheck(cardName):
@@ -23,14 +24,14 @@ def APIConfirmCheck(cardName):
         return True
 
 
+#get command line input for what image to use
+n = len(sys.argv)
+if(n == 0):
+    print("No file provided. Please include file name in arguments")
+    exit()
 
-imageFromWindow = ImageGrab.grab(bbox=None)
-width, height = imageFromWindow.size
-imageFromWindow = imageFromWindow.crop((0, height / 2.50, width / 2, height))
-imageFromWindow.save("WrittenFile.png")
 
-image = cv2.imread("WrittenFile.png")
-
+image = cv2.imread(sys.argv[0])
 
 original_image = image.copy()
 #parse JSON
