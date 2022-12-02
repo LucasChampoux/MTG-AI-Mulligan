@@ -10,7 +10,7 @@ custom_config = r'--oem 3 --psm 6'
 file.write(pytesseract.image_to_string(image, config=custom_config))
 file.close()
 
-image = imutils.resize(image, width = 1500)
+image = imutils.resize(image, width = 800)
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blur = cv2.GaussianBlur(gray, (3,3), 0)
