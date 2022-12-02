@@ -19,7 +19,7 @@ def APIConfirmCheck(cardName):
         return True
 
 
-image = cv2.imread("realMagicCards.png")
+image = cv2.imread("moreMagicCards.png")
 original_image = image.copy()
 #parse JSON
 jsonFile = open("NamesOnly.json", "r")
@@ -45,14 +45,16 @@ for c in contours:
     x,y,w,h = cv2.boundingRect(c)
     cv2.rectangle(image, (x, y), (x + w, y + h), (36, 255, 12), 3)
     ROI = original_image[y:y+h, x:x+w]
-    if(ROI.shape[0] > 250 and ROI.shape[0] < 270 and ROI.shape[1] > 175 and ROI.shape[1] < 195 and ROI.shape[2] > 0 and ROI.shape[2] < 5):
+    if(ROI.shape[0] > ROI.shape[1]):
         cv2.imwrite("ROI_{}.png".format(image_number), ROI)
         custom_config = r'--oem 3 --psm 6'
 
-        tempVal = pytesseract.image_to_string("ROI_{}.png".format(image_number), config = custom_config).splitlines()[0]
-        title_match = difflib.get_close_matches(tempVal, newJson)
+        tempVal = pytesseract.image_to_string("ROI_{}.png".format(image_number), config = custom_config).splitlines()
+        title_match = difflib.get_close_matches(tempVal[0], newJson)
         if not len(title_match) == 0:
             nameList.append(title_match[0])
+        else:
+            print("Card " + tempVal[0] + " does not appear to be a valid card name")
 
     image_number += 1
 
