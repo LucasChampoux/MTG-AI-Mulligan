@@ -7,6 +7,14 @@
 ## Overview
 
 A term project that will do the following:
-- Create an agent that can effectively understand multiple cards in one input
-     - This will be accomplished through Computer Vision and data used from the Scryfall API
-- Create an agent that will detect whether a given starting hand should be mulliganed or not
+- Take .png image file and report what magic cards are in the image to an output .txt file.
+
+## Use Instructions
+To launch the application, run the following command
+
+     python MTG_Card-Recognition.py [image file name]
+
+- Note that image file must be in the same directory as the python script.
+
+## Image Creation Constraints
+Card detection will work with either screenshots of virtual magic cards, or physical cards. Please make sure that images are of legible light levels and clarity.
