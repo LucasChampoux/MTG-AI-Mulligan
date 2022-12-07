@@ -22,10 +22,10 @@ def APIConfirmCheck(cardName):
 
 #get command line input for what image to use
 n = len(sys.argv)
-if(n == 0):
+if(n == 1):
     print("No file provided. Please include file name in arguments")
     exit()
-image = cv2.imread(sys.argv[0])
+image = cv2.imread(sys.argv[1])
 original_image = image.copy()
 
 #parse JSON

@@ -1,4 +1,6 @@
-"Temper",
 "Plains",
+"Exotic Orchard",
+"Cinderhaze Wretch",
+"Sanctum Weaver",
+"Gisa, Glorious Resurrector",
 "Plains",
-"Drannith Magistrate",
